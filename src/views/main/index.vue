@@ -9,6 +9,7 @@ import { showAndHiddenWindow } from '../../utils/index'
 
 const appWindow = getCurrentWindow()
 let unlisten: () => void
+
 // 桌面
 // 监听应用
 async function listenCurrentWindow() {
@@ -23,6 +24,7 @@ async function listenCurrentWindow() {
     }
   })
 }
+
 onMounted(async () => {
   await listenCurrentWindow()
 })

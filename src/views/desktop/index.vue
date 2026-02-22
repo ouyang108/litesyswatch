@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import type { SysStatus } from '../../types'
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
+import { inject } from 'vue'
 import { showAndHiddenWindow } from '../../utils/index'
+
+const sysStatusRef = inject<SysStatus>('sysStatusRef')
 
 async function dblclick() {
   const mainWin = await WebviewWindow.getByLabel('main')
-  console.log(mainWin)
 
   showAndHiddenWindow('main')
   if (mainWin) {
@@ -21,11 +24,11 @@ async function dblclick() {
     </div>
     <div class="monitor-item">
       <span class="label">CPU</span>
-      <span id="cpuValue" class="value">28.5%</span>
+      <span id="cpuValue" class="value">{{ sysStatusRef?.cpu || '0' }}%</span>
     </div>
     <div class="monitor-item">
       <span class="label">内存</span>
-      <span id="memValue" class="value">8.2 GB</span>
+      <span id="memValue" class="value">{{ sysStatusRef?.mem || '0' }}</span>
     </div>
   </div>
 </template>

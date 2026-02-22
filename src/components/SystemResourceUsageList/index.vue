@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import type { SysStatus } from '../../types'
+import { inject } from 'vue'
+
+const sysStatusRef = inject<SysStatus>('sysStatusRef')
 </script>
 
 <template>
@@ -13,7 +17,7 @@
         当前CPU总占用率
       </div>
       <div id="cpuUsage" class="stat-value">
-        28.5%
+        {{ sysStatusRef?.cpu || '0' }}%
       </div>
     </div>
     <!-- 内存占用 -->
@@ -22,7 +26,7 @@
         当前内存总占用
       </div>
       <div id="memUsage" class="stat-value">
-        8.2 GB (41.0%)
+        {{ sysStatusRef?.mem_used || '0' }} GB ({{ sysStatusRef?.mem || '0' }}%)
       </div>
     </div>
   </div>
