@@ -9,16 +9,34 @@
     "beforeBuildCommand": "pnpm build",
     "frontendDist": "../dist"
   },
+ 
   "app": {
     "windows": [
       {
         "title": "litesyswatch",
+        "url": "/",
+        "label": "main",
         "width": 800,
-        "height": 600,
+        "height": 645,
         "minWidth":800,
-        "minHeight":600,
-        "resizable": true
-      }
+        "minHeight":645,
+        "resizable": true ,
+        "backgroundColor":"#fff"
+      },
+      {
+      "label": "float",
+      "url": "#/desktop",  
+      "width": 120,
+      "height": 62,
+      "decorations": false,
+      "maximizable": false,
+      "alwaysOnTop": true,
+      "visible": false, 
+      "skipTaskbar": true,
+      "resizable": false,
+      "shadow":false,
+      "transparent": true
+    }
     ],
     "security": {
       "csp": null
