@@ -9,6 +9,8 @@ const sysStatusRef = ref<SysStatus>({
   cpu: '0',
   mem: '0',
   mem_used: '0',
+  top_cpu: { name: '', value: '' },
+  top_mem: { name: '', value: '' },
 })
 
 async function listenSysStatus() {

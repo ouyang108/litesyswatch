@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { getCurrentWindow } from '@tauri-apps/api/window'
 
-import { onBeforeUnmount, onMounted } from 'vue'
+import { onBeforeUnmount, onMounted, useTemplateRef } from 'vue'
 import highUsageProcessList from '../../components/HighUsageProcessList/index.vue'
 import Setting from '../../components/Setting/index.vue'
 import systemResourceUsageList from '../../components/SystemResourceUsageList/index.vue'
@@ -9,6 +9,7 @@ import { showAndHiddenWindow } from '../../utils/index'
 
 const appWindow = getCurrentWindow()
 let unlisten: () => void
+const setting = useTemplateRef('setting')
 
 // 桌面
 // 监听应用
@@ -16,6 +17,8 @@ async function listenCurrentWindow() {
   // 监听最小化
   unlisten = await appWindow.onResized(async () => {
     const minimized = await appWindow.isMinimized()
+    if (!setting.value || !setting.value?.setting?.closeMonitor)
+      return
     if (minimized) {
       showAndHiddenWindow('float')
     }
@@ -40,9 +43,9 @@ onBeforeUnmount(() => {
     <div class="title">
       系统设置与监控中心
     </div>
-    <Setting />
+    <Setting ref="setting" />
     <!-- 系统资源占用列表 -->
-    <systemResourceUsageList />
+    <systemResourceUsageList :setting="setting?.setting" />
     <!-- 高占用进程 -->
     <highUsageProcessList />
   </div>

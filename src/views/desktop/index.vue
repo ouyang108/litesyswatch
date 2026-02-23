@@ -28,7 +28,7 @@ async function dblclick() {
     </div>
     <div class="monitor-item">
       <span class="label">内存</span>
-      <span id="memValue" class="value">{{ sysStatusRef?.mem || '0' }}</span>
+      <span id="memValue" class="value">{{ sysStatusRef?.mem || '0' }}%</span>
     </div>
   </div>
 </template>

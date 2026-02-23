@@ -2,16 +2,14 @@
 import { ref } from 'vue'
 
 const setting = ref({
-  autoClose: true,
+
   closeMonitor: true,
-  monitorPosition: 'top-left',
+  cpuThreshold: 80,
+  memThreshold: 80,
 })
-const monitorPositionOptions = [
-  { label: '左上角', value: 'top-left' },
-  { label: '右上角', value: 'top-right' },
-  { label: '左下角', value: 'bottom-left' },
-  { label: '右下角', value: 'bottom-right' },
-]
+defineExpose({
+  setting,
+})
 </script>
 
 <template>
@@ -20,12 +18,6 @@ const monitorPositionOptions = [
     <div class="section-title">
       基础设置
     </div>
-    <!-- 自动关闭软件开关 -->
-    <label class="switch">
-      <input id="autoQuitSwitch" v-model="setting.autoClose" type="checkbox">
-      <span class="slider" />
-    </label>
-    <span id="switchText" class="switch-text">启动自动关闭</span>
 
     <!-- 悬浮显示CPU内存开关 -->
     <div style="margin-top: 15px;">
@@ -34,15 +26,27 @@ const monitorPositionOptions = [
         <span class="slider" />
       </label>
       <span id="floatSwitchText" class="switch-text">启动悬浮监控窗</span>
-
-      <!-- 位置选择器 -->
-      <div v-show="setting.closeMonitor" id="positionSelector" class="position-selector">
-        <label v-for="item in monitorPositionOptions" :key="item.value">
-          <input
-            v-model="setting.monitorPosition" type="radio" name="monitorPosition" :value="item.value"
-            :checked="setting.monitorPosition === item.value"
-          > {{ item.label }}
-        </label>
+    </div>
+    <!-- cpu阈值 -->
+    <div style="margin-top: 15px;">
+      <label>CPU警告阈值：</label>
+      <input
+        v-model="setting.cpuThreshold" type="number" class="threshold-input"
+        style="width: 60px; margin-left: 10px;" min="0" max="100"
+      > %
+      <div class="tips">
+        如果为0，则不警告
+      </div>
+    </div>
+    <!-- 内存阈值 -->
+    <div style="margin-top: 15px;">
+      <label>内存警告阈值：</label>
+      <input
+        v-model="setting.memThreshold" type="number" class="threshold-input"
+        style="width: 60px; margin-left: 10px;" min="0" max="100"
+      > %
+      <div class="tips">
+        如果为0，则不警告
       </div>
     </div>
   </div>
@@ -120,5 +124,23 @@ input:checked+.slider:before {
   font-size: 14px;
   color: #606266;
   cursor: pointer;
+}
+
+.threshold-input {
+  width: 80px;
+  padding: 6px 8px;
+  border: 1px solid #e6e6e6;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+}
+
+.threshold-input:focus {
+  border-color: #409eff;
+}
+.tips {
+
+  font-size: 12px;
+  color: #909399;
 }
 </style>

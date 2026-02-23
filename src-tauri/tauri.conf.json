@@ -17,9 +17,9 @@
         "url": "/",
         "label": "main",
         "width": 800,
-        "height": 645,
+        "height": 690,
         "minWidth":800,
-        "minHeight":645,
+        "minHeight":690,
         "resizable": true ,
         "backgroundColor":"#fff"
       },

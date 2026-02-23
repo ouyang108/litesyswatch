@@ -1,22 +1,26 @@
 <script setup lang="ts">
-import { ask } from '@tauri-apps/plugin-dialog'
+import type { SysStatus } from '../../types'
+// import { ask } from '@tauri-apps/plugin-dialog'
+import { inject } from 'vue'
 
 // 创建 Yes/No 对话框
 
-async function close() {
-  const answer = await ask('This action cannot be reverted. Are you sure?', {
-    title: 'Tauri',
-    kind: 'warning',
-  })
-  if (answer) {
-    // 用户点击了 Yes
-    console.log('用户点击了 Yes')
-  }
-  else {
-    // 用户点击了 No
-    console.log('用户点击了 No')
-  }
-}
+const sysStatusRef = inject<SysStatus>('sysStatusRef')
+
+// async function close() {
+//   const answer = await ask('This action cannot be reverted. Are you sure?', {
+//     title: 'Tauri',
+//     kind: 'warning',
+//   })
+//   if (answer) {
+//     // 用户点击了 Yes
+//     console.log('用户点击了 Yes')
+//   }
+//   else {
+//     // 用户点击了 No
+//     console.log('用户点击了 No')
+//   }
+// }
 </script>
 
 <template>
@@ -29,29 +33,33 @@ async function close() {
     <div class="process-item">
       <div class="process-info">
         <div id="topCpuProcessName" class="process-name">
-          CPU占用最高：Chrome.exe
+          CPU占用最高：{{ sysStatusRef?.top_cpu?.name || 'N/A' }}
         </div>
         <div id="topCpuProcessUsage" class="process-usage">
-          占用率：35.2%
+          占用率：{{ sysStatusRef?.top_cpu?.value || 'N/A' }}
         </div>
       </div>
-      <button class="btn btn-danger" @click="close">
+      <!-- <button class="btn btn-danger" @click="close">
         关闭进程
-      </button>
+      </button> -->
     </div>
     <!-- 内存占用最高进程 -->
     <div class="process-item">
       <div class="process-info">
         <div id="topMemProcessName" class="process-name">
-          内存占用最高：Node.exe
+          物理占用最高：{{ sysStatusRef?.top_mem?.name || 'N/A' }}
         </div>
         <div id="topMemProcessUsage" class="process-usage">
-          占用率：18.5%
+          占用：{{ sysStatusRef?.top_mem?.value || 'N/A' }}
         </div>
       </div>
-      <button class="btn btn-danger">
+      <!-- <button
+        class="btn btn-danger" @click="() => {
+          showNotification('关闭进程', '确认关闭进程吗？')
+        }"
+      >
         关闭进程
-      </button>
+      </button> -->
     </div>
   </div>
 </template>
