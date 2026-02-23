@@ -1,7 +1,79 @@
-# Tauri + Vue + TypeScript
+# LiteSysWatch 功能说明
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+LiteSysWatch 是一款轻量级的系统资源监控工具，基于 Tauri + Vue + TypeScript 构建，提供实时系统监控和预警功能。
 
-## Recommended IDE Setup
+## 核心功能
 
-- [VS Code](https://code.visualstudio.com/) + [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+### 1. 实时系统资源监控
+- **CPU 使用率监控**：每秒更新系统 CPU 总占用率
+- **内存使用率监控**：实时显示内存使用百分比和已用内存大小（GB）
+- **数据可视化**：通过颜色区分正常使用（蓝色）和高占用（红色）状态
+
+### 2. 高占用进程追踪
+- **CPU 占用最高进程**：显示当前 CPU 占用率最高的进程名称和占用率
+- **内存占用最高进程**：显示当前物理内存占用最高的进程名称和占用大小
+- **自动聚合**：相同名称的进程会自动合并计算资源占用
+
+### 3. 悬浮监控窗口
+- **迷你悬浮窗**：提供精简的悬浮监控窗口，实时显示 CPU 和内存使用率
+- **智能切换**：主窗口最小化时自动显示悬浮窗
+- **可拖拽设计**：悬浮窗支持拖拽移动，方便放置在桌面任意位置
+- **快速恢复**：点击悬浮窗关闭按钮可快速恢复主窗口
+
+### 4. 系统资源预警
+- **CPU 预警**：当 CPU 使用率超过设定阈值时，自动发送系统通知
+- **内存预警**：当内存使用率超过设定阈值时，自动发送系统通知
+- **智能冷却**：预警通知具有 1 分钟冷却时间，避免频繁打扰
+- **阈值可配置**：支持自定义 CPU 和内存的预警阈值（0-100%）
+- **可关闭预警**：将阈值设置为 0 即可关闭对应资源的预警功能
+
+### 5. 个性化设置
+- **悬浮窗开关**：可自由开启或关闭悬浮监控窗功能
+- **CPU 阈值设置**：自定义 CPU 预警触发阈值
+- **内存阈值设置**：自定义内存预警触发阈值
+- **设置持久化**：所有设置自动保存，下次启动时自动应用
+
+## 技术架构
+
+### 前端技术栈
+- **Vue 3**：采用 Composition API 和 `<script setup>` 语法
+- **TypeScript**：完整的类型支持
+- **Vue Router**：路由管理
+- **SCSS**：样式预处理
+
+### 后端技术栈
+- **Tauri 2**：跨平台桌面应用框架
+- **Rust**：高性能后端
+- **sysinfo**：系统信息获取库
+- **serde/serde_json**：数据序列化
+
+### 数据流
+1. Rust 后端每秒采集系统资源数据
+2. 通过 Tauri 事件机制（`sys-status` 事件）实时推送到前端
+3. Vue 组件通过 `inject` 接收数据并更新 UI
+4. 监控组件根据阈值判断是否触发预警通知
+
+## 窗口说明
+
+### 主窗口
+- 显示完整的系统资源使用情况
+- 提供设置面板进行个性化配置
+- 显示高占用进程列表
+
+### 悬浮窗口
+- 精简的监控界面，仅显示 CPU 和内存使用率
+- 半透明背景设计，不遮挡桌面内容
+- 支持拖拽移动
+
+## 使用场景
+
+- **开发环境监控**：实时监控开发环境的资源使用情况
+- **性能测试**：在进行性能测试时监控系统资源消耗
+- **日常使用**：了解系统资源使用情况，优化系统性能
+- **问题排查**：通过高占用进程列表快速定位资源消耗大户
+
+## 性能特性
+
+- **低资源占用**：采用 Rust 后端，资源占用极低
+- **高效更新**：每秒更新一次数据，保证实时性
+- **智能刷新**：进程数据每 3 秒更新一次，平衡性能和准确性
