@@ -18,6 +18,14 @@ pub fn run() {
             start_monitoring(app);
             Ok(())
         })
+        // 监听窗口事件
+        .on_window_event(|_window, event| match event {
+            tauri::WindowEvent::CloseRequested { .. } => {
+                // 当点击关闭按钮时，直接强制退出整个进程
+                std::process::exit(0);
+            }
+            _ => {}
+        })
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![greet])
