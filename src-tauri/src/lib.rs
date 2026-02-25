@@ -9,7 +9,10 @@ use tauri::{App, Emitter}; // Emitter 用于发送事件
 fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
-
+#[tauri::command]
+fn shadow_exit(){
+    std::process::exit(0);
+}
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -19,16 +22,16 @@ pub fn run() {
             Ok(())
         })
         // 监听窗口事件
-        .on_window_event(|_window, event| match event {
-            tauri::WindowEvent::CloseRequested { .. } => {
-                // 当点击关闭按钮时，直接强制退出整个进程
-                std::process::exit(0);
-            }
-            _ => {}
-        })
+        // .on_window_event(|_window, event| match event {
+        //     tauri::WindowEvent::CloseRequested { .. } => {
+        //         // 当点击关闭按钮时，直接强制退出整个进程
+        //         std::process::exit(0);
+        //     }
+        //     _ => {}
+        // })
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet])
+        .invoke_handler(tauri::generate_handler![greet,shadow_exit])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

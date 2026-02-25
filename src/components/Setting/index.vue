@@ -1,11 +1,30 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { invoke } from '@tauri-apps/api/core'
+import { getCurrentWindow } from '@tauri-apps/api/window'
+import { onMounted, ref } from 'vue'
 
 const setting = ref({
 
   closeMonitor: true,
   cpuThreshold: 80,
   memThreshold: 80,
+})
+async function listenClose() {
+  await getCurrentWindow().onCloseRequested(async (event) => {
+    event.preventDefault()
+    // 缓存数据
+    localStorage.setItem('setting', JSON.stringify(setting.value))
+    // 退出应用
+    await invoke('shadow_exit')
+  })
+}
+onMounted(async () => {
+  await listenClose()
+  // 读取缓存数据
+  const cachedSetting = localStorage.getItem('setting')
+  if (cachedSetting) {
+    setting.value = JSON.parse(cachedSetting)
+  }
 })
 defineExpose({
   setting,
