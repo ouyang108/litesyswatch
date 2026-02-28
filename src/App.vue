@@ -20,13 +20,31 @@ async function listenSysStatus() {
     }
   })
 }
+// 监听F5键 禁止刷新
+function handleF5Key(event: KeyboardEvent) {
+  if (event.key === 'F5') {
+    event.preventDefault()
+  }
+}
+function handleContextMenu(event: MouseEvent) {
+  event.preventDefault()
+  // return () => window.removeEventListener('contextmenu', handleContextMenu)
+}
 onMounted(async () => {
   await listenSysStatus()
+  // 监听F5键
+  window.addEventListener('keydown', handleF5Key)
+  // 监听右键菜单
+  window.addEventListener('contextmenu', handleContextMenu)
 })
 onBeforeUnmount(() => {
   if (sysStatusUnListen) {
     sysStatusUnListen()
   }
+  // 移除F5键监听
+  window.removeEventListener('keydown', handleF5Key)
+  // 移除右键菜单监听
+  window.removeEventListener('contextmenu', handleContextMenu)
 })
 provide('sysStatusRef', sysStatusRef)
 </script>
