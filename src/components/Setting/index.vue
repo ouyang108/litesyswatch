@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { invoke } from '@tauri-apps/api/core'
 import { getCurrentWindow } from '@tauri-apps/api/window'
-import { onMounted, ref } from 'vue'
+import { disable, enable, isEnabled } from '@tauri-apps/plugin-autostart'
+import { onMounted, ref, watch } from 'vue'
 
 const setting = ref({
 
   closeMonitor: true,
   cpuThreshold: 80,
   memThreshold: 80,
+  autostart: false,
 })
 async function listenClose() {
   await getCurrentWindow().onCloseRequested(async (event) => {
@@ -18,7 +20,11 @@ async function listenClose() {
     await invoke('shadow_exit')
   })
 }
+async function checkAutostart() {
+  setting.value.autostart = await isEnabled()
+}
 onMounted(async () => {
+  checkAutostart()
   await listenClose()
   // 读取缓存数据
   const cachedSetting = localStorage.getItem('setting')
@@ -29,6 +35,17 @@ onMounted(async () => {
 defineExpose({
   setting,
 })
+watch(() => setting.value.autostart, async (newValue) => {
+  if (newValue) {
+    // 启动开机自启
+    await enable()
+    // console.log(await isEnabled())
+  }
+  else {
+    // 关闭开机自启
+    await disable()
+  }
+})
 </script>
 
 <template>
@@ -37,7 +54,14 @@ defineExpose({
     <div class="section-title">
       基础设置
     </div>
-
+    <!-- 是否开机自启 -->
+    <div style="margin-top: 15px;">
+      <label class="switch">
+        <input id="floatMonitorSwitch" v-model="setting.autostart" type="checkbox">
+        <span class="slider" />
+      </label>
+      <span id="floatSwitchText" class="switch-text">是否开机自启</span>
+    </div>
     <!-- 悬浮显示CPU内存开关 -->
     <div style="margin-top: 15px;">
       <label class="switch">
